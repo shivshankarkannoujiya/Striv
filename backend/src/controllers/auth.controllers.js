@@ -1,4 +1,5 @@
 import { User } from '../models/user.model.js';
+import cloudinary from '../utils/cloudinary.js';
 import { sendWelcomeEmail } from '../utils/emailHandler.js';
 import { generateToken } from '../utils/token.js';
 
@@ -96,4 +97,53 @@ const signOutUser = async (_, res) => {
     }
 };
 
-export { signUpUser, signInUser, signOutUser };
+const updateUserProfile = async (req, res) => {
+    const { profilePic } = req.body;
+    try {
+        const userId = req.user?._id;
+
+        if (!profilePic) {
+            return res.status(400).json({ message: 'Profile pic is required' });
+        }
+
+        const uploadResponse = await cloudinary.uploader.upload(profilePic);
+
+        const updatedUser = await User.findByIdAndUpdate(
+            userId,
+            {
+                profilePic: uploadResponse.secure_url,
+            },
+            { new: true }
+        );
+
+        res.status(200).json({
+            success: true,
+            data: { user: updatedUser },
+            message: 'User profile update successfully',
+        });
+    } catch (error) {
+        console.error('Error while updating user profilepic: ', error);
+        return res.status(500).json({
+            success: false,
+            message: 'Internal server error',
+        });
+    }
+};
+
+const getMe = async (req, res) => {
+    try {
+        res.status(200).json({
+            success: true,
+            data: { user: req.user },
+            message: 'User fetched successfully',
+        });
+    } catch (error) {
+        console.error('Error while fetching user: ', error);
+        return res.status(500).json({
+            success: false,
+            message: 'Internal server Error',
+        });
+    }
+};
+
+export { signUpUser, signInUser, signOutUser, updateUserProfile, getMe };
