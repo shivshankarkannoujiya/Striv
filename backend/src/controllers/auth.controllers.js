@@ -1,4 +1,5 @@
 import { User } from '../models/user.model.js';
+import { sendWelcomeEmail } from '../utils/emailHandler.js';
 import { generateToken } from '../utils/token.js';
 
 const signUpUser = async (req, res) => {
@@ -38,15 +39,18 @@ const signUpUser = async (req, res) => {
             data: { user: createduser },
             message: 'User registered successfully',
         });
+
+        sendWelcomeEmail(createduser.email, createduser.fullName, process.env.CLIENT_URL).catch(
+            (error) => console.error('Failed to send welcome email:', error)
+        );
+        
     } catch (error) {
         console.error('Error while registering user:', error);
         return res.status(500).json({ message: 'Internal server error' });
     }
 };
 
-const signInUser = async (req, res) => {
-    
-};
+const signInUser = async (req, res) => {};
 const logOutUser = async (req, res) => {};
 
 export { signUpUser, signInUser, logOutUser };
