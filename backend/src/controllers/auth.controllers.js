@@ -72,7 +72,7 @@ const signInUser = async (req, res) => {
 
         const loggedInUser = await User.findById(user._id).select('-password');
 
-        res.status(201).json({
+        res.status(200).json({
             success: true,
             data: { user: loggedInUser },
             message: 'User loggedIn successfully',
