@@ -43,14 +43,57 @@ const signUpUser = async (req, res) => {
         sendWelcomeEmail(createduser.email, createduser.fullName, process.env.CLIENT_URL).catch(
             (error) => console.error('Failed to send welcome email:', error)
         );
-        
     } catch (error) {
         console.error('Error while registering user:', error);
         return res.status(500).json({ message: 'Internal server error' });
     }
 };
 
-const signInUser = async (req, res) => {};
-const logOutUser = async (req, res) => {};
+const signInUser = async (req, res) => {
+    const { email, password } = req.body;
 
-export { signUpUser, signInUser, logOutUser };
+    try {
+        if (!email || !password) {
+            return res.status(400).json({ message: 'All fields are required' });
+        }
+
+        const user = await User.findOne({ email });
+        if (!user) {
+            return res.status(404).json({ message: 'Invalid Credentials' });
+        }
+
+        const isPasswordValid = user.isPasswordCorrect(password);
+        if (!isPasswordValid) {
+            return res.status(400).json({ message: 'Invalid Credentials' });
+        }
+
+        generateToken(user._id, res);
+
+        const loggedInUser = await User.findById(user._id).select('-password');
+
+        res.status(201).json({
+            success: true,
+            data: { user: loggedInUser },
+            message: 'User loggedIn successfully',
+        });
+    } catch (error) {
+        console.error('Error login User: ', error);
+        return res.status(500).json({
+            success: false,
+            message: 'Something went wrong while logIn user',
+        });
+    }
+};
+
+const signOutUser = async (_, res) => {
+    try {
+        res.status(200)
+            .cookie('jwt', '', { maxAge: 0 })
+            .json({ message: 'User Logged out successfully' });
+    } catch (error) {
+        console.error('Error logout user: ', error);
+        return res.status(500).json({ message: 'Semething went wrong while logout user' });
+    }
+};
+
+export { signUpUser, signInUser, signOutUser };
