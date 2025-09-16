@@ -1,4 +1,5 @@
 import { User } from '../models/user.model.js';
+import { generateToken } from '../utils/token.js';
 
 const signUpUser = async (req, res) => {
     try {
@@ -30,7 +31,9 @@ const signUpUser = async (req, res) => {
             });
         }
 
-        return res.status(201).json({
+        generateToken(createduser._id, res);
+
+        res.status(201).json({
             success: true,
             data: { user: createduser },
             message: 'User registered successfully',
@@ -40,5 +43,10 @@ const signUpUser = async (req, res) => {
         return res.status(500).json({ message: 'Internal server error' });
     }
 };
-const signInUser = async (req, res) => {};
+
+const signInUser = async (req, res) => {
+    
+};
 const logOutUser = async (req, res) => {};
+
+export { signUpUser, signInUser, logOutUser };
