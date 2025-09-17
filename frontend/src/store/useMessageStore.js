@@ -55,4 +55,17 @@ export const useMessageStore = create((set, get) => ({
       set({ isMessagesLoading: false });
     }
   },
+
+  sendMessage: async (messageData) => {
+    const { selectedUser, messages } = get();
+    try {
+      const response = await axiosInstance.post(
+        `/message/send/${selectedUser._id}`,
+        messageData
+      );
+      set({ messages: messages.concat(response.data?.data.message) });
+    } catch (error) {
+      toast.error("Failed to send message");
+    }
+  },
 }));

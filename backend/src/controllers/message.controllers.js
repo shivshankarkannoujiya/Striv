@@ -48,6 +48,9 @@ const getMessagesByUserId = async (req, res) => {
 
 const sendMessage = async (req, res) => {
     try {
+        console.log('BODY:', req.body);
+        console.log('PARAMS:', req.params);
+
         const { text, image } = req.body;
         const me_as_senderId = req.user?._id;
         const { id: receiverId } = req.params;
@@ -58,7 +61,7 @@ const sendMessage = async (req, res) => {
             });
         }
 
-        if (senderId === receiverId) {
+        if (me_as_senderId.toString() === receiverId.toString()) {
             return res.status(400).json({
                 message: 'Cannot send message to yourself',
             });

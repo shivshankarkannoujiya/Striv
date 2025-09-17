@@ -5,6 +5,5 @@ export const axiosInstance = axios.create({
     import.meta.env.MODE === "development"
       ? "http://localhost:8000/api/v1"
       : "/api/v1",
-  headers: { "Content-Type": "multipart/form-data" },
   withCredentials: true,
 });
