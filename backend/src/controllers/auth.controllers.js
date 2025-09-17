@@ -98,16 +98,14 @@ const signOutUser = async (_, res) => {
 };
 
 const updateUserProfile = async (req, res) => {
-    const { profilePic } = req.body;
     try {
         const userId = req.user?._id;
 
-        if (!profilePic) {
+        if (!req.file) {
             return res.status(400).json({ message: 'Profile pic is required' });
         }
 
-        const uploadResponse = await cloudinary.uploader.upload(profilePic);
-
+        const uploadResponse = await cloudinary.uploader.upload(req.file.path);
         const updatedUser = await User.findByIdAndUpdate(
             userId,
             {

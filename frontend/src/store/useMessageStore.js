@@ -11,7 +11,7 @@ export const useMessageStore = create((set, get) => ({
   isUsersLoading: null,
   isMessagesLoading: null,
   isMessagesLoading: null,
-  isSoundEnabled: localStorage.getItem("isSoundEnabled") === true,
+  isSoundEnabled: JSON.parse(localStorage.getItem("isSoundEnabled")) === true,
 
   toggleSound: () => {
     localStorage.setItem("isSoundEnabled", !get().isSoundEnabled);

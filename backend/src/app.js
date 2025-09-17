@@ -11,12 +11,12 @@ app.use(
     cors({
         origin: allowedOrigin,
         credentials: true,
-        methods: ['GET', 'POST', 'DELETE', 'OPTIONS'],
+        methods: ['GET', 'POST', 'PUT', 'DELETE', 'OPTIONS'],
         allowedHeaders: ['Content-Type', 'Authorization'],
     })
 );
-app.use(express.json({ limit: `10kb` }));
-app.use(express.urlencoded({ extended: true, limit: `10kb` }));
+app.use(express.json({ limit: `10mb` }));
+app.use(express.urlencoded({ extended: true, limit: `10mb` }));
 app.use(cookieParser());
 
 import authRouter from './routes/auth.routes.js';
