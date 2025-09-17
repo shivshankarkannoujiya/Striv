@@ -1,8 +1,20 @@
 import express from 'express';
 import cookieParser from 'cookie-parser';
+import cors from 'cors';
 
 const app = express();
 
+const allowedOrigin =
+    process.env.NODE_ENV === 'production' ? 'https://striv.com' : 'http://localhost:5173';
+
+app.use(
+    cors({
+        origin: allowedOrigin,
+        credentials: true,
+        methods: ['GET', 'POST', 'DELETE', 'OPTIONS'],
+        allowedHeaders: ['Content-Type', 'Authorization'],
+    })
+);
 app.use(express.json({ limit: `10kb` }));
 app.use(express.urlencoded({ extended: true, limit: `10kb` }));
 app.use(cookieParser());
