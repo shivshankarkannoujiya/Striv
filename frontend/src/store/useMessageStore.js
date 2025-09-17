@@ -10,7 +10,6 @@ export const useMessageStore = create((set, get) => ({
   selectedUser: null,
   isUsersLoading: null,
   isMessagesLoading: null,
-  isMessagesLoading: null,
   isSoundEnabled: JSON.parse(localStorage.getItem("isSoundEnabled")) === true,
 
   toggleSound: () => {
@@ -42,6 +41,18 @@ export const useMessageStore = create((set, get) => ({
       toast.error(error.response.data.message);
     } finally {
       set({ isUsersLoading: false });
+    }
+  },
+
+  getMessageByUserId: async (userId) => {
+    set({ isMessagesLoading: true });
+    try {
+      const response = await axiosInstance.get(`/message/${userId}`);
+      set({ messages: response.data?.data?.message });
+    } catch (error) {
+      toast.error(`Something went wrong`);
+    } finally {
+      set({ isMessagesLoading: false });
     }
   },
 }));
