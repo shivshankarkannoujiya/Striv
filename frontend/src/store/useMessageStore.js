@@ -36,7 +36,7 @@ export const useMessageStore = create((set, get) => ({
   getMyChatFriends: async () => {
     try {
       set({ isUsersLoading: true });
-      const response = await axiosInstance.get("/message/contacts");
+      const response = await axiosInstance.get("/message/chats");
       set({ chats: response.data?.data?.chatFriends });
     } catch (error) {
       toast.error(error.response.data.message);
