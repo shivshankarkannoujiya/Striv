@@ -11,6 +11,8 @@ const ProfileHeader = () => {
   const [selectedImage, setSelectedImage] = useState(null);
 
   const fileInputRef = useRef(null);
+
+  // TODO: fix the image upload from both -> BE/FE
   const handleImageUpload = (event) => {
     const file = event.target.files[0];
     if (!file) return;
